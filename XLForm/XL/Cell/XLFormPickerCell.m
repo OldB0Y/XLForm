@@ -99,8 +99,8 @@
 {
     if (self.inlineRowDescriptor){
 		if (self.inlineRowDescriptor.valueTransformer){
-			NSAssert([self.inlineRowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-			NSValueTransformer * valueTransformer = [self.inlineRowDescriptor.valueTransformer new];
+//			NSAssert([self.inlineRowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
+            NSValueTransformer * valueTransformer = self.inlineRowDescriptor.valueTransformer;
 			NSString * tranformedValue = [valueTransformer transformedValue:[[self.inlineRowDescriptor.selectorOptions objectAtIndex:row] valueData]];
 			if (tranformedValue){
 				return tranformedValue;
@@ -110,8 +110,8 @@
     }
 	
 	if (self.rowDescriptor.valueTransformer){
-		NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-		NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
+//		NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
+        NSValueTransformer * valueTransformer = self.rowDescriptor.valueTransformer;
 		NSString * tranformedValue = [valueTransformer transformedValue:[[self.rowDescriptor.selectorOptions objectAtIndex:row] valueData]];
 		if (tranformedValue){
 			return tranformedValue;

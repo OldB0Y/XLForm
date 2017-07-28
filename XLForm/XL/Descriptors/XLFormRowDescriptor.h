@@ -52,7 +52,7 @@ typedef void(^XLOnChangeBlock)(id __nullable oldValue,id __nullable newValue,XLF
 @property (readonly, nonnull) NSString * rowType;
 @property (nullable) NSString * title;
 @property (nonatomic, nullable) id value;
-@property (nullable) Class valueTransformer;
+@property (nullable, nonatomic, strong) NSValueTransformer *valueTransformer;
 @property UITableViewCellStyle cellStyle;
 @property (nonatomic) CGFloat height;
 

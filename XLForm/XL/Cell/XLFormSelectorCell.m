@@ -50,8 +50,8 @@
             return self.rowDescriptor.noValueDisplayText;
         }
         if (self.rowDescriptor.valueTransformer){
-            NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-            NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
+//            NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
+            NSValueTransformer * valueTransformer = self.rowDescriptor.valueTransformer;
             NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
             if (tranformedValue){
                 return tranformedValue;
@@ -62,8 +62,8 @@
             NSArray * selectedValues = self.rowDescriptor.value;
             if ([selectedValues formIndexForItem:option] != NSNotFound){
                 if (self.rowDescriptor.valueTransformer){
-                    NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-                    NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
+//                    NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
+                    NSValueTransformer * valueTransformer = self.rowDescriptor.valueTransformer;
                     NSString * tranformedValue = [valueTransformer transformedValue:option];
                     if (tranformedValue){
                         [descriptionArray addObject:tranformedValue];
@@ -80,8 +80,8 @@
         return self.rowDescriptor.noValueDisplayText;
     }
     if (self.rowDescriptor.valueTransformer){
-        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-        NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
+//        NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
+        NSValueTransformer * valueTransformer = self.rowDescriptor.valueTransformer;
         NSString * tranformedValue = [valueTransformer transformedValue:self.rowDescriptor.value];
         if (tranformedValue){
             return tranformedValue;
@@ -268,8 +268,8 @@
             for (id option in self.rowDescriptor.selectorOptions) {
 				NSString *optionTitle = [option displayText];
 				if (self.rowDescriptor.valueTransformer){
-					NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-					NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
+//					NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
+                    NSValueTransformer * valueTransformer = self.rowDescriptor.valueTransformer;
 					NSString * transformedValue = [valueTransformer transformedValue:[option valueData]];
 					if (transformedValue) {
 						optionTitle = transformedValue;
@@ -418,8 +418,8 @@
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
 	if (self.rowDescriptor.valueTransformer){
-		NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
-		NSValueTransformer * valueTransformer = [self.rowDescriptor.valueTransformer new];
+//		NSAssert([self.rowDescriptor.valueTransformer isSubclassOfClass:[NSValueTransformer class]], @"valueTransformer is not a subclass of NSValueTransformer");
+        NSValueTransformer * valueTransformer = self.rowDescriptor.valueTransformer;
 		NSString * tranformedValue = [valueTransformer transformedValue:[[self.rowDescriptor.selectorOptions objectAtIndex:row] valueData]];
 		if (tranformedValue){
 			return tranformedValue;
