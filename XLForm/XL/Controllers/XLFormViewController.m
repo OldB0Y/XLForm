@@ -713,7 +713,27 @@
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [[self.form.formSections objectAtIndex:section] title];
+    XLFormSectionDescriptor *sectionDescriptor = [self.form.formSections objectAtIndex:section];
+    if (sectionDescriptor.headerView == nil) {
+        return sectionDescriptor.title;
+    }
+    return nil;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    CGFloat headerHeight = UITableViewAutomaticDimension;
+    XLFormSectionDescriptor *sectionDescriptor = [self.form.formSections objectAtIndex:section];
+    if (sectionDescriptor.headerView != nil) {
+        headerHeight = CGRectGetHeight(sectionDescriptor.headerView.frame);
+    }
+    return headerHeight;
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    XLFormSectionDescriptor *sectionDescriptor = [self.form.formSections objectAtIndex:section];
+    return sectionDescriptor.headerView;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section

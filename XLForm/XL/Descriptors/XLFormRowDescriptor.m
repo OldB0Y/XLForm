@@ -221,9 +221,9 @@ CGFloat XLFormRowInitialHeight = -2;
 
 -(XLFormAction *)action
 {
-    if (!_action){
-        _action = [[XLFormAction alloc] init];
-    }
+//    if (!_action){
+//        _action = [[XLFormAction alloc] init];
+//    }
     return _action;
 }
 

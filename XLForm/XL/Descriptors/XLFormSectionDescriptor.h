@@ -42,6 +42,7 @@ typedef NS_ENUM(NSUInteger, XLFormSectionInsertMode) {
 
 @interface XLFormSectionDescriptor : NSObject
 
+@property (nonatomic, nullable) UIView *headerView;
 @property (nonatomic, nullable) NSString * title;
 @property (nonatomic, nullable) NSString * footerTitle;
 @property (readonly, nonnull) NSMutableArray * formRows;
