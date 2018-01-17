@@ -49,23 +49,19 @@
 	[self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.slider attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:44]];
 	[self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[textLabel]-|" options:0 metrics:0 views:@{@"textLabel": self.textLabel}]];
 	[self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[slider]-|" options:0 metrics:0 views:@{@"slider": self.slider}]];
-	
-	[self valueChanged:nil];
+
 }
 
 -(void)update {
 	
     [super update];
     self.textLabel.text = self.rowDescriptor.title;
-    self.slider.value = [self.rowDescriptor.value floatValue];
+    self.slider.value = [self sliderValueFromValue:[self.rowDescriptor.value floatValue]];
     self.slider.enabled = !self.rowDescriptor.isDisabled;
-    [self valueChanged:nil];
 }
 
 -(void)valueChanged:(UISlider*)_slider {
-	if(self.steps != 0) {
-		self.slider.value = roundf((self.slider.value-self.slider.minimumValue)/(self.slider.maximumValue-self.slider.minimumValue)*self.steps)*(self.slider.maximumValue-self.slider.minimumValue)/self.steps + self.slider.minimumValue;
-	}
+    self.slider.value = [self sliderValueFromValue:_slider.value];
 	self.rowDescriptor.value = @(self.slider.value);
 }
 
@@ -73,6 +69,16 @@
 	return 88;
 }
 
+-(float)sliderValueFromValue:(float)value
+{
+    float sliderValue = 0.0;
+    if(self.steps != 0){
+        sliderValue = roundf((value-self.slider.minimumValue)/(self.slider.maximumValue-self.slider.minimumValue)*self.steps)*(self.slider.maximumValue-self.slider.minimumValue)/self.steps + self.slider.minimumValue;
+    }else{
+        sliderValue = MIN(self.slider.maximumValue, MAX(value, self.slider.minimumValue));
+    }
+    return sliderValue;
+}
 
 -(UILabel *)textLabel
 {
