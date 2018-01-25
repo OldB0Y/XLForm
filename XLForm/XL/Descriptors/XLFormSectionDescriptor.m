@@ -120,7 +120,7 @@
 
 -(BOOL)isMultivaluedSection
 {
-    return (self.sectionOptions != XLFormSectionOptionNone);
+    return (self.sectionOptions != XLFormSectionOptionNone || self.multivaluedTag.length > 0);
 }
 
 -(void)addFormRow:(XLFormRowDescriptor *)formRow

@@ -137,8 +137,8 @@
     if (self.form.title){
         self.title = self.form.title;
     }
-    [self.tableView setEditing:YES animated:NO];
-    self.tableView.allowsSelectionDuringEditing = YES;
+//    [self.tableView setEditing:YES animated:NO];
+//    self.tableView.allowsSelectionDuringEditing = YES;
     self.form.delegate = self;
     _oldBottomTableContentInset = nil;
 }
@@ -631,7 +631,7 @@
     if ([baseCell conformsToProtocol:@protocol(XLFormInlineRowDescriptorCell)] && ((id<XLFormInlineRowDescriptorCell>)baseCell).inlineRowDescriptor){
         return NO;
     }
-    return YES;
+    return [rowDescriptor.sectionDescriptor isMultivaluedSection];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -667,47 +667,47 @@
 
 }
 
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete){
-        XLFormRowDescriptor * multivaluedFormRow = [self.form formRowAtIndex:indexPath];
-        // end editing
-        UIView * firstResponder = [[multivaluedFormRow cellForFormController:self] findFirstResponder];
-        if (firstResponder){
-                [self.tableView endEditing:YES];
-        }
-        [multivaluedFormRow.sectionDescriptor removeFormRowAtIndex:indexPath.row];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.02 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.tableView.editing = !self.tableView.editing;
-            self.tableView.editing = !self.tableView.editing;
-        });
-        if (firstResponder){
-            UITableViewCell<XLFormDescriptorCell> * firstResponderCell = [firstResponder formDescriptorCell];
-            XLFormRowDescriptor * rowDescriptor = firstResponderCell.rowDescriptor;
-            [self inputAccessoryViewForRowDescriptor:rowDescriptor];
-        }
-    }
-    else if (editingStyle == UITableViewCellEditingStyleInsert){
-
-        XLFormSectionDescriptor * multivaluedFormSection = [self.form formSectionAtIndex:indexPath.section];
-        if (multivaluedFormSection.sectionInsertMode == XLFormSectionInsertModeButton && multivaluedFormSection.sectionOptions & XLFormSectionOptionCanInsert){
-            [self multivaluedInsertButtonTapped:multivaluedFormSection.multivaluedAddButton];
-        }
-        else{
-            XLFormRowDescriptor * formRowDescriptor = [self formRowFormMultivaluedFormSection:multivaluedFormSection];
-            [multivaluedFormSection addFormRow:formRowDescriptor];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.02 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.tableView.editing = !self.tableView.editing;
-                self.tableView.editing = !self.tableView.editing;
-            });
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-            UITableViewCell<XLFormDescriptorCell> * cell = (UITableViewCell<XLFormDescriptorCell> *)[formRowDescriptor cellForFormController:self];
-            if ([cell formDescriptorCellCanBecomeFirstResponder]){
-                [cell formDescriptorCellBecomeFirstResponder];
-            }
-        }
-    }
-}
+//-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (editingStyle == UITableViewCellEditingStyleDelete){
+//        XLFormRowDescriptor * multivaluedFormRow = [self.form formRowAtIndex:indexPath];
+//        // end editing
+//        UIView * firstResponder = [[multivaluedFormRow cellForFormController:self] findFirstResponder];
+//        if (firstResponder){
+//                [self.tableView endEditing:YES];
+//        }
+//        [multivaluedFormRow.sectionDescriptor removeFormRowAtIndex:indexPath.row];
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.02 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            self.tableView.editing = !self.tableView.editing;
+//            self.tableView.editing = !self.tableView.editing;
+//        });
+//        if (firstResponder){
+//            UITableViewCell<XLFormDescriptorCell> * firstResponderCell = [firstResponder formDescriptorCell];
+//            XLFormRowDescriptor * rowDescriptor = firstResponderCell.rowDescriptor;
+//            [self inputAccessoryViewForRowDescriptor:rowDescriptor];
+//        }
+//    }
+//    else if (editingStyle == UITableViewCellEditingStyleInsert){
+//
+//        XLFormSectionDescriptor * multivaluedFormSection = [self.form formSectionAtIndex:indexPath.section];
+//        if (multivaluedFormSection.sectionInsertMode == XLFormSectionInsertModeButton && multivaluedFormSection.sectionOptions & XLFormSectionOptionCanInsert){
+//            [self multivaluedInsertButtonTapped:multivaluedFormSection.multivaluedAddButton];
+//        }
+//        else{
+//            XLFormRowDescriptor * formRowDescriptor = [self formRowFormMultivaluedFormSection:multivaluedFormSection];
+//            [multivaluedFormSection addFormRow:formRowDescriptor];
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.02 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                self.tableView.editing = !self.tableView.editing;
+//                self.tableView.editing = !self.tableView.editing;
+//            });
+//            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+//            UITableViewCell<XLFormDescriptorCell> * cell = (UITableViewCell<XLFormDescriptorCell> *)[formRowDescriptor cellForFormController:self];
+//            if ([cell formDescriptorCellCanBecomeFirstResponder]){
+//                [cell formDescriptorCellBecomeFirstResponder];
+//            }
+//        }
+//    }
+//}
 
 #pragma mark - UITableViewDelegate
 
@@ -779,29 +779,45 @@
     [self didSelectFormRow:row];
 }
 
--(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+-(NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    XLFormRowDescriptor * row = [self.form formRowAtIndex:indexPath];
-    XLFormSectionDescriptor * section = row.sectionDescriptor;
-    if (section.sectionOptions & XLFormSectionOptionCanInsert){
-        if (section.formRows.count == indexPath.row + 2){
-            if ([[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:row.rowType]){
-                UITableViewCell<XLFormDescriptorCell> * cell = [row cellForFormController:self];
-                UIView * firstResponder = [cell findFirstResponder];
-                if (firstResponder){
-                    return UITableViewCellEditingStyleInsert;
-                }
-            }
-        }
-        else if (section.formRows.count == (indexPath.row + 1)){
-            return UITableViewCellEditingStyleInsert;
-        }
+    NSArray<UITableViewRowAction *> *actions = nil;
+
+    XLFormRowDescriptor *row = [self.form formRowAtIndex:indexPath];
+    XLFormSectionDescriptor *section = row.sectionDescriptor;
+    if (section.multivaluedTag.length > 0){
+        actions = @[[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive
+                                                              title:NSLocalizedString(@"Удалить", nil)
+                                                            handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+                                                                [section removeFormRow:row];
+                                                            }]];
     }
-    if (section.sectionOptions & XLFormSectionOptionCanDelete){
-        return UITableViewCellEditingStyleDelete;
-    }
-    return UITableViewCellEditingStyleNone;
+    return actions;
 }
+
+//-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    XLFormRowDescriptor * row = [self.form formRowAtIndex:indexPath];
+//    XLFormSectionDescriptor * section = row.sectionDescriptor;
+//    if (section.sectionOptions & XLFormSectionOptionCanInsert){
+//        if (section.formRows.count == indexPath.row + 2){
+//            if ([[XLFormViewController inlineRowDescriptorTypesForRowDescriptorTypes].allKeys containsObject:row.rowType]){
+//                UITableViewCell<XLFormDescriptorCell> * cell = [row cellForFormController:self];
+//                UIView * firstResponder = [cell findFirstResponder];
+//                if (firstResponder){
+//                    return UITableViewCellEditingStyleInsert;
+//                }
+//            }
+//        }
+//        else if (section.formRows.count == (indexPath.row + 1)){
+//            return UITableViewCellEditingStyleInsert;
+//        }
+//    }
+//    if (section.sectionOptions & XLFormSectionOptionCanDelete){
+//        return UITableViewCellEditingStyleDelete;
+//    }
+//    return UITableViewCellEditingStyleNone;
+//}
 
 
 - (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath
@@ -830,14 +846,14 @@
     return proposedDestinationIndexPath;
 }
 
-- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCellEditingStyle editingStyle = [self tableView:tableView editingStyleForRowAtIndexPath:indexPath];
-    if (editingStyle == UITableViewCellEditingStyleNone){
-        return NO;
-    }
-    return YES;
-}
+//- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    UITableViewCellEditingStyle editingStyle = [self tableView:tableView editingStyleForRowAtIndexPath:indexPath];
+//    if (editingStyle == UITableViewCellEditingStyleNone){
+//        return NO;
+//    }
+//    return YES;
+//}
 
 - (void)tableView:(UITableView *)tableView willBeginReorderingRowAtIndexPath:(NSIndexPath *)indexPath
 {
