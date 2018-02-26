@@ -31,7 +31,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self configure];
+//        [self configure];
     }
     return self;
 }
