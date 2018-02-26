@@ -725,7 +725,11 @@
     XLFormSectionDescriptor *sectionDescriptor = [self.form.formSections objectAtIndex:section];
     CGFloat headerHeight = sectionDescriptor.title == nil ? 0.0 : UITableViewAutomaticDimension;
     if (sectionDescriptor.headerView != nil) {
-        headerHeight = CGRectGetHeight(sectionDescriptor.headerView.frame);
+        if(sectionDescriptor.headerHeight > 0.0){
+            headerHeight = sectionDescriptor.headerHeight;
+        }else{
+            headerHeight = UITableViewAutomaticDimension;
+        }
     }
     return headerHeight;
 }
