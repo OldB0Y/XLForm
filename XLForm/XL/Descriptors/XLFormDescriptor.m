@@ -291,7 +291,7 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
         if (section.multivaluedTag.length > 0){
             NSMutableArray * multiValuedValuesArray = [NSMutableArray new];
             for (XLFormRowDescriptor * row in section.formRows) {
-                if (row.value){
+                if (row.value && row.value != [NSNull null]){
                     [multiValuedValuesArray addObject:[row.value valueData]];
                 }
             }
@@ -299,8 +299,9 @@ NSString * const XLValidationStatusErrorKey = @"XLValidationStatusErrorKey";
         }
         else{
             for (XLFormRowDescriptor * row in section.formRows) {
-                if (row.tag.length > 0){
-                    [result setObject:([row.value valueData] ?: [NSNull null]) forKey:row.tag];
+                id value = [row.value valueData];
+                if (row.tag.length > 0 && value != nil){
+                    [result setObject:value forKey:row.tag];
                 }
             }
         }
